@@ -1,3 +1,21 @@
+# Private/local notes
+private/
+local/
+*.local.*
+
+# Potential dev files and folders
+compose.yaml
+data/
+logs/
+data-*/
+logs-*/
+*-data/
+*-logs/
+data_*/
+logs_*/
+*_data/
+*_logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
