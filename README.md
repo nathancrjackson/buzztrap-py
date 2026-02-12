@@ -90,11 +90,11 @@ docker compose up -d --build
 
 ### 3. Networking Note (Important!)
 
-Since by default the SSH container runs as a non-root user, it cannot bind to the privileged port `22`. It defaults to port **2222**.
+Since by default the SSH container runs as a non-root user, it cannot bind to the privileged port `22`. As such it defaults to port **2222**.
 
-If you wish to bind BuzzTrap SSH to port 22 you will need to rebuild the container using the `dockerfile_ssh_root` dockerfile.
+To bind BuzzTrap SSH to port 22 for a layer 2 (host networking) deployment, rebuild the container using `dockerfile_ssh_root`. Using the standard container will result in errors when changing the port.
 
-From inside the folder containing the Docker Compose:
+To do this start with contemplating the added security risks, then from inside the folder containing the Docker Compose run:
 
 ```bash
 # Must be done after the initial compose build and any subsequent compose rebuilds
