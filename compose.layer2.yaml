@@ -1,0 +1,51 @@
+name: buzztrap
+
+services:
+
+  buzztrap-conductor:
+    build:
+      context: .
+      dockerfile: dockerfile_conductor
+    image: buzztrap-conductor
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./data-conductor:/app/data
+      - ./logs-conductor:/app/logs
+
+  buzztrap-ssh:
+    build:
+      context: .
+      dockerfile: dockerfile_ssh
+    image: buzztrap-ssh
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./data-ssh:/app/data
+      - ./logs-ssh:/app/logs
+    network_mode: host
+    depends_on:
+      - buzztrap-conductor
+
+  buzztrap-rdp:
+    build:
+      context: .
+      dockerfile: dockerfile_rdp
+    image: buzztrap-rdp
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./data-rdp:/app/data
+      - ./logs-rdp:/app/logs
+    network_mode: host
+    depends_on:
+      - buzztrap-conductor

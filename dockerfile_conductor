@@ -1,0 +1,29 @@
+# Use an official Python runtime as the base image
+#FROM python:3.11-slim
+FROM python:3.11-alpine
+
+# Prevent Python from writing .pyc files to disk (for compat with Read-Only filesystems)
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Create a dedicated group and user with a fixed UID (1000)
+RUN addgroup -g 1000 buzztrap && \
+    adduser -u 1000 -G buzztrap -h /app -D buzztrap
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Python script and any requirements file into the container
+COPY LICENSE requirements_conductor.txt buzztrap_conductor.py lib_printlog.py lib_appconfig.py lib_unixsocketserver.py lib_applifecyclemanager.py lib_getmac.py /app/
+
+# Install dependencies & Fix Permissions
+RUN mkdir -p /app/data && \
+    mkdir -p /app/logs && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements_conductor.txt && \
+    chown -R buzztrap:buzztrap /app
+
+# Switch to the non-root user
+USER buzztrap
+
+# Specify the command to run your Python script
+CMD ["python", "buzztrap_conductor.py"]

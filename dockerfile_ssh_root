@@ -1,0 +1,24 @@
+# ---
+# USE THIS IF YOU NEED TO BIND TO PORT 22
+# ---
+
+# Use an official Python runtime as the base image
+FROM python:3.11-alpine
+
+# Prevent Python from writing .pyc files to disk (for compat with Read-Only filesystems)
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Python script and any requirements file into the container
+COPY LICENSE requirements_ssh.txt buzztrap_ssh.py lib_printlog.py lib_appconfig.py lib_unixsocketclient.py lib_applifecyclemanager.py lib_getmac.py /app/
+
+# Install dependencies & Fix Permissions
+RUN mkdir -p /app/data && \
+    mkdir -p /app/logs && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements_ssh.txt
+
+# Specify the command to run your Python script
+CMD ["python", "buzztrap_ssh.py"]

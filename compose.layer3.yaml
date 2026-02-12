@@ -1,0 +1,61 @@
+name: buzztrap
+
+services:
+
+  buzztrap-conductor:
+    build:
+      context: .
+      dockerfile: dockerfile_conductor
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    environment:
+      - TZ=UTC
+    volumes:
+      - ./data-conductor:/app/data
+      - ./logs-conductor:/app/logs
+    networks:
+      - net-connected
+
+  buzztrap-ssh:
+    build:
+      context: .
+      dockerfile: dockerfile_ssh
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    environment:
+      - TZ=UTC
+    # ports:
+    #   - "22:2222" # Can be 22 with port forwarding
+    volumes:
+      - ./data-ssh:/app/data
+      - ./logs-ssh:/app/logs
+    networks:
+      - net-isolated
+
+  buzztrap-rdp:
+    build:
+      context: .
+      dockerfile: dockerfile_rdp
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    environment:
+      - TZ=UTC
+    ports:
+      - "3389:3389"
+    volumes:
+      - ./data-rdp:/app/data
+      - ./logs-rdp:/app/logs
+    networks:
+      - net-isolated
+
+networks:
+  net-connected:
+    driver: bridge
+  net-isolated:
+    driver: bridge
+    driver_opts:
+      # Can reply to mapped ports via Docker Proxy but can't initiate new connections out
+      com.docker.network.bridge.enable_ip_masquerade: "false"
