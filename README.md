@@ -63,12 +63,16 @@ From inside the folder containing the Docker Compose:
 
 ```bash
 # Create directories for persistent data and logs
-sudo mkdir -p ./data
-sudo mkdir -p ./logs
+sudo mkdir -p ./data-conductor
+sudo mkdir -p ./data-ssh
+sudo mkdir -p ./data-rdp
+sudo mkdir -p ./logs-conductor
+sudo mkdir -p ./logs-ssh
+sudo mkdir -p ./logs-rdp
 
 # Set ownership to UID 1000 (The 'buzztrap' user inside the container)
-sudo chown -R 1000:1000 ./data
-sudo chown -R 1000:1000 ./logs
+sudo chown -R 1000:1000 ./data-*
+sudo chown -R 1000:1000 ./logs-*
 
 ```
 
